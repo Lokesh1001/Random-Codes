@@ -1,0 +1,30 @@
+#include <stdio.h>
+int main()
+{
+    // 3 3
+    // 3 4 5 4 5 6 5 6 7
+    // min = ( sum of each resource - 1 ) + 1
+    // author @lokesh
+    int p, r;
+    printf("Enter number of processes and resources : \n");
+    scanf("%d%d", &p, &r);
+    int alloc[p][r];
+    for (int i = 0; i < p; i++)
+    {
+        for (int j = 0; j < r; j++)
+        {
+            scanf("%d", &alloc[i][j]);
+        }
+    }
+    for (int i = 0; i < r; i++)
+    {
+        int sum = 0;
+        for (int j = 0; j < p; j++)
+        {
+            if(alloc[i][j]>0)
+            sum += alloc[j][i] - 1;
+        }
+        sum++;
+        printf("Minimum requirement of resource to avoid deadlock for R%d is %d\n", i + 1, sum);
+    }
+}
