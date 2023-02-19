@@ -96,3 +96,83 @@ no--;
 
 }
 }
+#include<stdio.h>
+#include<stdbool.h>
+int main(){
+    // Bankers / Safers Algorithm
+    // 5 3
+    // 0 1 0 2 0 0 3 0 2 2 1 1 0 0 2
+    // 7 5 3 3 2 2 9 0 2 2 2 2 4 3 3
+    // 3 3 2
+    // author @Lokesh
+printf("Enter number of processes and resource : \n");
+int p,r;
+scanf("%d%d",&p,&r);
+int alloc[p][r],max[p][r],req[p][r]; 
+printf("Enter allocation matrix : \n");
+for(int i=0;i<p;i++){
+for(int j=0;j<r;j++){
+scanf("%d",&alloc[i][j]);
+}
+}
+printf("Enter max matrix : \n");
+for(int i=0;i<p;i++){
+for(int j=0;j<r;j++){
+scanf("%d",&max[i][j]);
+}
+}
+for(int i=0;i<p;i++){
+for(int j=0;j<r;j++){
+req[i][j]=max[i][j]-alloc[i][j];
+}
+}
+printf("Enter available resources : \n");
+int av[r];
+int temp_av[r];
+for(int i=0;i<r;i++){
+scanf("%d",&av[i]);
+temp_av[i]=av[i];
+}
+//req matrix and available resource found
+bool finish[p];
+for(int i=0;i<p;i++){
+finish[i]=false;
+}
+
+// for logic 2.0
+for(int i=0;i<p;i++){
+    for(int j=0;j<p;j++){
+        bool flag=true;
+        for(int k=0;k<r;k++){
+            if(req[j][k]>av[k])
+            flag=false;
+        }
+        if(flag==true && finish[j]==false){
+            finish[j]=true;
+            printf("Process %d has finished ! \n",j+1);
+            for(int k=0;k<r;k++){
+                av[k]+=alloc[j][k];
+            }
+            break;
+        }
+    }
+}
+printf("Need Matrix is : \n");
+for(int i=0;i<p;i++){
+    for(int j=0;j<r;j++){
+        printf("%d\t",req[i][j]);
+    }
+    printf("\n");
+}
+for(int i=0;i<p;i++){
+    if(finish[i]==false){
+    printf("Deadlock has Occured");
+    return 0;
+    }
+}
+printf("Safe State reached\n");
+for(int i=0;i<r;i++){
+    printf("%d\t",av[i]);
+}
+}
+
