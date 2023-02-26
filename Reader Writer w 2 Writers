@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdlib.h>
+// author @lokesh
+sem_t mutex; // reader variable
+sem_t wrt; // writer variable
+int data = 1;
+int reader_count = 0;
+void *reader(void *n)
+{
+    sem_wait(&mutex);
+    reader_count++;
+    if (reader_count == 1)
+        sem_wait(&wrt);
+    printf("Reader %d is reading data %d\n", *((int *)n), data);
+    reader_count--;
+    if (reader_count == 0)
+        sem_post(&wrt); // let writers in if noone is reading
+    sem_post(&mutex); // let other readers in
+}
+void *writer1(void *n)
+{
+    sem_wait(&wrt);
+    data++;
+    printf("Writer 1 %d is increasing data as %d\n", *((int *)n), data);
+    sem_post(&wrt);
+}
+void *writer2(void *n)
+{
+    sem_wait(&wrt);
+    data--;
+    printf("Writer 2 %d is decreasing data as %d\n", *((int *)n), data);
+    sem_post(&wrt);
+}
+int main()
+{
+    sem_init(&mutex, 0, 1);
+    sem_init(&wrt, 0, 1);
+    int r, w1, w2;
+    printf("Enter number of readers , writer1 and writer2: \n");
+    scanf("%d%d%d", &r, &w1, &w2);
+    pthread_t readert[r], writert1[w1], writert2[w2];
+    // store names
+    int a[1000];
+    for (int i = 0; i < 1000; i++)
+    {
+        a[i] = i + 1;
+    }
+    for (int i = 0; i < r; i++)
+    {
+        pthread_create(&readert[i], NULL, (void *)reader, (void *)&a[i]);
+    }
+    for (int i = 0; i < w1; i++)
+    {
+        pthread_create(&writert1[i], NULL, (void *)writer1, (void *)&a[i]);
+    }
+    for (int i = 0; i < w2; i++)
+    {
+        pthread_create(&writert2[i], NULL, (void *)writer2, (void *)&a[i]);
+    }
+    for (int i = 0; i < w1; i++)
+    {
+        pthread_join(writert1[i], NULL);
+    }
+    for (int i = 0; i < r; i++)
+    {
+        pthread_join(readert[i], NULL);
+    }
+    for (int i = 0; i < w2; i++)
+    {
+        pthread_join(writert2[i], NULL);
+    }
+}
