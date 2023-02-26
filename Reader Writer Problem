@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdlib.h>
+// author @lokesh
+sem_t mutex; // reader variable
+sem_t wrt; // writer variable
+int data = 1;
+int reader_count = 0;
+void *reader(void *n)
+{
+    sem_wait(&mutex);
+    sem_wait(&wrt);
+    reader_count++;
+    printf("Reader %d is reading data %d\n", *((int *)n), data);
+    reader_count--;
+    sem_post(&mutex);
+    if (reader_count == 0)
+        sem_post(&wrt);
+}
+void *writer(void *n)
+{
+    sem_wait(&wrt);
+    data++;
+    printf("Writer %d is writing data as %d\n", *((int *)n), data);
+    sem_post(&wrt);
+}
+int main()
+{
+    sem_init(&mutex, 0, 1);
+    sem_init(&wrt, 0, 1);
+    int r, w;
+    printf("Enter number of readers and writers: \n");
+    scanf("%d%d", &r, &w);
+    pthread_t readert[r], writert[w];
+    // store names
+    int a[100];
+    int maxxx;
+    if (r > w)
+        maxxx = r;
+    else
+        maxxx = w;
+    for (int i = 0; i < maxxx; i++)
+    {
+        a[i] = i + 1;
+    }
+    // order of threads occuring (rough estimate)
+    for (int i = 0; i < r / 2; i++)
+    {
+        pthread_create(&readert[i], NULL, (void *)reader, (void *)&a[i]);
+    }
+    for (int i = 0; i < w; i++)
+    {
+        pthread_create(&writert[i], NULL, (void *)writer, (void *)&a[i]);
+    }
+    for (int i = r / 2; i < r; i++)
+    {
+        pthread_create(&readert[i], NULL, (void *)reader, (void *)&a[i]);
+    }
+    for (int i = 0; i < r; i++)
+    {
+        pthread_join(readert[i], NULL);
+    }
+    for (int i = 0; i < w; i++)
+    {
+        pthread_join(writert[i], NULL);
+    }
+}
