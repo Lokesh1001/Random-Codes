@@ -1,0 +1,64 @@
+#include<iostream>
+#include<limits.h>
+using namespace std;
+// author @lokesh
+// IMPORTANT : Traversal must be done diagonally to find the tables
+void matrix_chain_topdown(int n,int cost[]){
+
+    // 2 tables c table for storing cost and p table for storing position
+    int c[n][n],p[n][n];
+    for(int a=0;a<n;a++){
+        // diagonal matrix traversal
+            int i=0;
+            int j=a;
+        for(int k=0;k<n;k++){
+            if(i==j || i==0 || j==0){
+                // set diagonal elements as 0 since cost of multiplying single matrix is 0
+                c[i][j]=0;
+                p[i][j]=0;
+            }
+            else{
+                // main logic
+                int min=INT_MAX;
+                int pos=0;
+                for(int k=i;k<j;k++){
+                    int temp=c[i][k]+c[k+1][j]+(cost[i-1]*cost[k]*cost[j]);
+                    if(temp<min){
+                    min=temp;
+                    pos=k;
+                    }
+                }
+            c[i][j]=min;
+            p[i][j]=pos;
+            }
+            //cout<<"pos : "<<i<<j<<endl;
+            i++;
+            j++;
+        }
+    }
+    
+    // print the tables
+    for(int i=1;i<n;i++){
+        for(int j=i+1;j<n;j++){
+            cout<<c[i][j]<<" ";
+        }
+        if(i!=n-1)
+        cout<<endl;
+    }
+    for(int i=1;i<n;i++){
+        for(int j=i+1;j<n;j++){
+            cout<<p[i][j]<<" ";
+        }
+        if(i!=n-1)
+        cout<<endl;
+    }
+    cout<<c[1][n-1];
+}
+int main(){
+    int n;
+    cin>>n;
+    int cost[n];
+    for(int i=0;i<n;i++)
+    cin>>cost[i];
+    matrix_chain_topdown(n,cost);
+}
