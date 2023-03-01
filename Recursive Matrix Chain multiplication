@@ -1,0 +1,31 @@
+#include<iostream>
+#include<vector>
+#include<limits.h>
+using namespace std;
+int matrix_chain_mul(int i,int j,vector<int>p){
+    if(i==j)
+    return 0;
+    int mini = INT_MAX;
+    int count;
+    for (int k = i; k < j; k++)
+    {
+        count = matrix_chain_mul(i, k, p)
+                + matrix_chain_mul(k+1, j, p)
+                + p[i - 1] * p[k] * p[j];
+        if(count<mini)
+        mini=count;
+    }
+    return mini;
+}
+int main()
+{
+    int n,ele,i;
+    vector<int> p;
+    cin>>n;
+    for(i=0;i<n;i++)
+    {
+        cin>>ele;
+        p.push_back(ele);
+    }
+cout<<matrix_chain_mul(1,n-1,p);
+}
