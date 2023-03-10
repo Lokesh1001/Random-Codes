@@ -1,0 +1,167 @@
+// author @lokeshbhargava_
+class global {
+    public static int test = 0;
+    public static int[] fork = new int[5];
+
+    public void set() {
+        fork[0] = 0;
+        fork[1] = 0;
+        fork[2] = 0;
+        fork[3] = 0;
+        fork[4] = 0;
+    }
+
+    synchronized public static void disp() {
+        System.out.print("Current available forks :");
+        for (int i = 0; i < 5; i++) {
+            if (fork[i] == 0) {
+                System.out.print((i) + " ");
+            }
+        }
+        System.out.println();
+    }
+}
+
+class MonitorDemo {
+    synchronized void showMsg(String msg, int id) { // synchronized method
+        if (id == 0 && global.fork[0] == 0 && global.fork[1] == 0) {
+            global.fork[0] = 1;
+            global.fork[1] = 1;
+            global.disp();
+            System.out.println(msg);
+            try {
+                // global.disp();
+                Thread.sleep(5000); // eat up time
+                global.fork[0] = 0;
+                global.fork[1] = 0;
+                System.out.println("Philosopher " + (id + 1) + " finished eating");
+                // global.disp();
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else if (id == 4 && global.fork[0] == 0 && global.fork[4] == 0) {
+            global.fork[0] = 1;
+            global.fork[4] = 1;
+            System.out.println(msg);
+            global.disp();
+            try {
+                // global.disp();
+                Thread.sleep(5000);
+                global.fork[0] = 0;
+                global.fork[4] = 0;
+                System.out.println("Philosopher " + (id + 1) + " finished eating");
+                // global.disp();
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else if ((id == 1 || id == 2 || id == 3) && global.fork[id - 1] == 0 && global.fork[id] == 0) {
+            global.fork[id - 1] = 1;
+            global.fork[id] = 1;
+            System.out.println(msg);
+            global.disp();
+            try {
+                // global.disp();
+                Thread.sleep(5000);
+                global.fork[id - 1] = 0;
+                global.fork[id] = 0;
+                System.out.println("Philosopher " + (id + 1) + " finished eating");
+                // global.disp();
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            // System.out.println("Forks are busy ! Philosopher"+id+" cannot eat");
+        }
+    }
+}
+
+class Thread1 extends Thread {
+    MonitorDemo m;
+
+    Thread1(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        int a = 1;
+        while (a == 1)
+            m.showMsg("Philosopher 1 is eating !", 0);
+    }
+}
+
+class Thread2 extends Thread {
+    MonitorDemo m;
+
+    Thread2(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        int a = 1;
+        while (a == 1)
+            m.showMsg("Philosopher 2 is eating !", 1);
+    }
+}
+
+class Thread3 extends Thread {
+    MonitorDemo m;
+
+    Thread3(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        int a = 1;
+        while (a == 1)
+            m.showMsg("Philosopher 3 is eating !", 2);
+    }
+}
+
+class Thread4 extends Thread {
+    MonitorDemo m;
+
+    Thread4(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        int a = 1;
+        while (a == 1)
+            m.showMsg("Philosopher 4 is eating !", 3);
+    }
+}
+
+class Thread5 extends Thread {
+    MonitorDemo m;
+
+    Thread5(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        int a = 1;
+        while (a == 1)
+            m.showMsg("Philosopher 5 is eating !", 4);
+    }
+}
+
+public class test {
+    public static void main(String args[]) {
+        global obj2 = new global();
+        obj2.set();
+        MonitorDemo obj = new MonitorDemo();
+        Thread1 t1 = new Thread1(obj);
+        Thread2 t2 = new Thread2(obj);
+        Thread3 t3 = new Thread3(obj);
+        Thread4 t4 = new Thread4(obj);
+        Thread5 t5 = new Thread5(obj);
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
+    }
+}
