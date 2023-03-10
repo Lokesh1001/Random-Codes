@@ -1,0 +1,68 @@
+// author @lokesh
+import java.util.*;
+
+class MonitorDemo {
+    int a = 1;
+
+    synchronized void func(String msg) { // synchronized method
+        if (msg == "2") {
+            a++;
+            System.out.println("Writer updated value of a to : " + a);
+        } else
+            System.out.println("Reader reading value of a as : " + a);
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+class Reader extends Thread { // reader
+    MonitorDemo m;
+
+    Reader(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        m.func("1");
+    }
+}
+
+class Writer extends Thread { // writer
+    MonitorDemo m;
+
+    Writer(MonitorDemo m) {
+        this.m = m;
+    }
+
+    public void run() {
+        m.func("2");
+    }
+}
+
+public class test {
+    public static void main(String args[]) {
+        MonitorDemo obj = new MonitorDemo();
+        System.out.println("Enter number of readers and writers : ");
+        int n, m;
+        Scanner sc = new Scanner(System.in);
+        n = sc.nextInt();
+        m = sc.nextInt();
+        Reader t1[] = new Reader[n];
+        Writer t2[] = new Writer[m];
+        for (int i = 0; i < n; i++) {
+            t1[i] = new Reader(obj);
+        }
+        for (int i = 0; i < m; i++) {
+            t2[i] = new Writer(obj);
+        }
+        for (int i = 0; i < n; i++) {
+            t1[i].start();
+        }
+        for (int i = 0; i < m; i++) {
+            t2[i].start();
+        }
+    }
+}
