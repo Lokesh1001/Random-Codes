@@ -1,0 +1,18 @@
+import java.util.*;
+public class katsuba {
+    public static void main(String args[]){
+        Scanner sc=new Scanner(System.in);
+        long x=sc.nextInt();
+        long y=sc.nextInt();
+        long a=x/100; long b=x%100; long c=y/100; long d=y%100;
+        
+        long e1=a*c;
+        long e2=b*d;
+        long e3=(a+b)*(c+d);
+        long e4=e3-e2-e1;
+        long e5=e1*10000 + e2 + e4*100;
+
+        System.out.println("Multiplication using Normal Multiplication: "+(x*y));
+        System.out.println("Multiplication using Katsuba : "+e5);
+    }
+}
