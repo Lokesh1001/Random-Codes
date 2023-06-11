@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<math.h>
+#include<stdbool.h>
+
+void class_check(int n){
+
+    if(n>=0 && n<=127)
+        printf("/8");
+
+    if(n>=128 && n<=191)
+        printf("/16");
+
+    if(n>=192 && n<=223)
+        printf("/24");
+
+    if(n>224 && n<=239)
+        printf("/Special");
+
+    if(n>=240 && n<=255)
+        printf("/Special");
+
+}
+int main() {
+
+    // sample 190.168.0.0
+    char arr[100];
+    printf("Enter IP Address in Classful Notation:");
+    scanf("%s",arr);
+    
+    printf("\nClassless address:");
+    printf("%s",arr);
+    char str[100];
+    int c=0;
+    for(int i=0;i<strlen(arr);i++){
+        if(arr[i]=='.' || arr[i]=='/'){
+            class_check(atoi(str));
+            break;
+        }
+        else{
+            str[c]=arr[i];
+            c++;
+        }
+    }
+    return 0;
+}
