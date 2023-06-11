@@ -1,0 +1,101 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<math.h>
+#include<stdbool.h>
+int counter=0;
+int cap;
+void setcap(int n){
+    cap=n;
+}
+void todecimal(int arr[],int c){
+    int a=0;
+    int co=0;
+    for(int i=0;i<c;i++){
+        if(arr[i]==1){
+            int t=pow(2,co);
+            a+=pow(2,co);
+        }
+        co++;
+    }
+    printf("%d",a);
+}
+void checkcounter(int arr[],int c,int a){
+    for(int i=c-1;i>=0;i--){
+       if(counter>=cap && a==0){
+           arr[i]=0;
+       }
+       if(counter>=cap && a==1){
+           arr[i]=1;
+       }
+       counter++;
+    }
+
+    todecimal(arr,c);
+}
+void converttobinary(int n,int a){
+    int arr[100];
+    int c=0;
+    for(int i=0;n>0;i++){
+        arr[i]=n%2;
+        n/=2;
+        c++;
+    }
+    for(int i=8-c;i>0;i--){
+        arr[c]=0;
+        c++;
+    }
+    checkcounter(arr,c,a);
+}
+
+int main() {
+    // 205.16.37.39/28 sample input
+    char arr[100];
+    printf("Enter Known Address :");
+    scanf("%s",arr);
+    
+    int b = (arr[strlen(arr)-2]-'0')*10 + (arr[strlen(arr)-1] - '0');
+    setcap(b);
+    int a=pow(2,32-b);
+    printf("Number of address is :%d\n",a);
+    char str[100];
+    int c=0;
+    printf("First Address :");
+    for(int i=0;i<strlen(arr);i++){
+        if(arr[i]=='.' || arr[i]=='/'){
+            converttobinary(atoi(str),0);
+            str[0]=' ';
+            str[1]=' ';
+            str[2]=' ';
+            c=0;
+            if(arr[i]=='.')
+            printf(".");
+        }
+        else{
+            str[c]=arr[i];
+            c++;
+        }
+    }
+
+    str[0]=' ';
+    str[1]=' ';
+    c=0;
+    counter=0;
+    printf("\nLast Address :");
+    for(int i=0;i<strlen(arr);i++){
+        if(arr[i]=='.' || arr[i]=='/'){
+            converttobinary(atoi(str),1);
+            str[0]=' ';
+            str[1]=' ';
+            str[2]=' ';
+            c=0;
+            if(arr[i]=='.')
+            printf(".");
+        }
+        else{
+            str[c]=arr[i];
+            c++;
+        }
+    }
+    return 0;
+}
