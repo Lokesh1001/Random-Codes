@@ -1,0 +1,34 @@
+import java.util.*;
+public class test {
+    static int LongestSeq(String str){
+        int maxl=0;
+        int currl=0;
+        int prevl=0;
+        boolean flip=false;
+        for(int i=0;i<str.length();i++){
+            if(str.charAt(i)=='1'){
+                currl++;
+            }
+            if(str.charAt(i)=='0' && flip==false){
+                prevl=currl;
+                currl=0;
+            }
+            if(str.charAt(i)=='0' && flip==true){
+                if(currl+prevl>maxl)
+                maxl=currl+prevl;
+                prevl=currl;
+                currl=0;
+            }
+        }
+        if(currl+prevl>maxl)
+                maxl=currl+prevl+1;
+        return maxl;
+    }
+    public static void main(String args[]){
+        
+        try (Scanner sc = new Scanner(System.in)) {
+            String str=sc.next();
+            System.out.println("Longest Sequence of 1's after flipping a bit :"+LongestSeq(str));
+        }
+}
+}
