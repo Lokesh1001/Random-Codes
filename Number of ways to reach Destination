@@ -1,0 +1,21 @@
+import java.util.*;
+class func{
+int find_ways(int r,int c,int cr,int cc){
+        if(cr>2 || cc>2)
+        return 0;
+        if(cr==r && cc==c)
+        return 1;
+        return find_ways(r,c,cr+1,cc)+find_ways(r,c,cr,cc+1);
+    }
+}
+class test{
+    public static void main(String args[]){
+        try(Scanner sc=new Scanner(System.in)){
+            System.out.println("Enter the destination :");
+            int d1=sc.nextInt();
+            int d2=sc.nextInt();
+            func obj=new func();
+            System.out.println("Total number of ways :"+obj.find_ways(d1,d2,0,0));
+      }
+    }
+}
